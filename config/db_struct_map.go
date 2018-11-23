@@ -15,7 +15,7 @@ var (
 		"datetime":   "time.Time",
 		"timestamp":  "time.Time",
 		"time":       "time.Time",
-		"year":       "int8",
+		"year":       "uint8",
 		"varbinary":  "string",
 		"enum":       "string",
 		"set":        "string",
