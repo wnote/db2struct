@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"database/sql"
 	"fmt"
 	"regexp"
 	"strings"
@@ -8,12 +9,12 @@ import (
 	"github.com/wnote/db2struct/config"
 )
 
-func ReplaceStruct(structStr string, tableName string) (string, string) {
+func ReplaceStruct(structStr string, tablePrefix string, tableName string) (string, string) {
 	parseTableName := tableName
-	if config.CustomCfg["table_prefix"] != "" {
-		pos := strings.Index(tableName, config.CustomCfg["table_prefix"])
+	if tablePrefix != "" {
+		pos := strings.Index(tableName, tablePrefix)
 		if pos == 0 {
-			parseTableName = tableName[len(config.CustomCfg["table_prefix"]):]
+			parseTableName = tableName[len(tablePrefix):]
 		}
 	}
 	structName := parseName(parseTableName)
@@ -22,8 +23,8 @@ func ReplaceStruct(structStr string, tableName string) (string, string) {
 	return structStr, parseTableName
 }
 
-func ReplaceFields(structStr string, packageName string, tableName string) string {
-	fieldList, err := getAllFields(tableName)
+func ReplaceFields(db *sql.DB, structStr string, packageName string, tableName string) string {
+	fieldList, err := getAllFields(db, tableName)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)

@@ -3,8 +3,6 @@ package utils
 import (
 	"database/sql"
 	"fmt"
-
-	"github.com/wnote/db2struct/config"
 )
 
 type field struct {
@@ -16,18 +14,7 @@ type field struct {
 	Extra   string
 }
 
-var db *sql.DB
-
-func init() {
-	var err error
-	db, err = sql.Open(config.CustomCfg["db_type"], config.CustomCfg["db_dn"])
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-}
-
-func GetAllTables() []string {
+func GetAllTables(db *sql.DB) []string {
 	rows, err := db.Query("show tables;")
 	if err != nil {
 		fmt.Println(err)
@@ -42,7 +29,7 @@ func GetAllTables() []string {
 	return allTables
 }
 
-func getAllFields(tableName string) ([]field, error) {
+func getAllFields(db *sql.DB, tableName string) ([]field, error) {
 	rows, err := db.Query("show fields from " + tableName + ";")
 	if err != nil {
 		return nil, err
@@ -61,4 +48,13 @@ func getAllFields(tableName string) ([]field, error) {
 		})
 	}
 	return fieldsMap, nil
+}
+
+func GetDb(dbType string, dbDn string) *sql.DB {
+	db, err := sql.Open(dbType, dbDn)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	return db
 }
