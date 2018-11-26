@@ -1,7 +1,7 @@
 # db2struct
 A tool for change database(mysql) struct to go struct
 
-##Get Start
+## Get Start
 ```bash
 go get -u github.com/wnote/db2struct
 cd /path/to/wnote/db2struct
