@@ -1,7 +1,8 @@
-package utils
+package core
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -71,4 +72,19 @@ func pathExists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+func GetFileContent(filePath string) []byte {
+	exist, err := pathExists(filePath)
+	if err != nil {
+		panic(err)
+	}
+	if !exist {
+		panic(filePath + " not exist!")
+	}
+	fileContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+	return fileContent
 }
