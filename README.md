@@ -1,6 +1,6 @@
 
 # db2struct  Documentation
-[点我查看中文版](./docs/README.cn.md)
+[点我查看中文版](./docs/README_cn.md)
 
 ## 1, About
  - A tool for change database(mysql) struct to go struct
@@ -23,7 +23,7 @@
      {
        "db_type":   "mysql",
        "file_mode": "0777",
-       "output_list":[
+       "out_conf_list":[
          {
            "table_prefix": "pjt_",
            "db_dn":        "root:123456@tcp(127.0.0.1:3306)/test?charset=utf8&parseTime=true&loc=Local",
@@ -37,7 +37,7 @@
     ```
     db_type: current only support mysql
     file_mode: output file permission
-    output_list: model output config list
+    out_conf_list: model output config list
        table_prefix: If all table has prefix ,then set it,otherwise fill blank
        db_dn: mysql connection db
        output_dir: model output dir
@@ -47,7 +47,7 @@
     ### Simple config.json
          ```json
          {
-           "output_list":[
+           "out_conf_list":[
              {
                "db_dn":        "root:123456@tcp(127.0.0.1:3306)/test?charset=utf8&parseTime=true&loc=Local",
                "output_dir":  "./model/test",
