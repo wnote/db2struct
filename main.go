@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"regexp"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/urfave/cli"
@@ -15,7 +14,6 @@ import (
 )
 
 func main() {
-
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
@@ -29,8 +27,7 @@ func main() {
 
 	currentDir, err := filepath.Abs("./")
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -44,81 +41,61 @@ func main() {
 		},
 	}
 
-	app.Action = func(c *cli.Context) error {
-		configFile := c.String("config")
-		configJson := core.GetFileContent(configFile)
-		conf := config.Config{}
-		err := json.Unmarshal(configJson, &conf)
-		if err != nil {
-			panic(err)
-		}
-
-		templatePath := c.String("tpl")
-		var template string
-		if templatePath != "" {
-			templateByte, err := ioutil.ReadFile(templatePath)
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("It will use framework template.")
-			}
-			template = string(templateByte)
-		}
-		if template == "" {
-			template = config.MODEL_STRUCT_TEMPLATE
-		}
-
-		for _, out := range conf.OutputList {
-			outDir := core.CheckAndMakeDir(out.OutputDir+"/", conf.FileMode)
-			db := core.GetDb(conf.DbType, out.DbDn)
-			allTables := core.GetAllTables(db)
-			regTables := out.SelectTables
-			for _, tableName := range allTables {
-				if len(regTables) > 0 {
-					matched := false
-					for _, regStr := range regTables {
-						reg, err := regexp.Compile(regStr)
-						if err != nil {
-							panic(err)
-						}
-						matched = reg.MatchString(tableName)
-						if matched {
-							break
-						}
-					}
-					if !matched {
-						continue
-					}
-				}
-				// Replace the tag {struct_name},{table_name}.
-				structStr, parseTableName := core.ReplaceStruct(template, out.TablePrefix, tableName)
-
-				// Replace the tag {struct_field},{column_name},{package}
-				packageName := core.GetPackageNameFromOutPutDir(outDir)
-				structStr = core.ReplaceFields(db, structStr, packageName, tableName)
-
-				// Write structStr to model file
-				core.CreateAndWriteFile(outDir+parseTableName+".go", structStr, conf.FileMode)
-			}
-		}
-
-		return nil
-	}
+	app.Action = AppAction
 	app.Run(os.Args)
+}
 
-	/*for _, customCfg := range config.CustomCfgList {
-		outDir := utils.CheckAndMakeDir(customCfg["out_put_dir"]+"/", config.GlobalCfg["file_mode"])
-		db := utils.GetDb(config.GlobalCfg["db_type"], customCfg["db_dn"])
-		allTables := utils.GetAllTables(db)
-		for _, tableName := range allTables {
-			// Replace the tag {struct_name},{table_name}.
-			structStr, parseTableName := utils.ReplaceStruct(config.MODEL_STRUCT_TEMPLATE, customCfg["table_prefix"], tableName)
+// Application run entry
+func AppAction(c *cli.Context) error {
+	configFile := c.String("config")
+	configJson := core.GetFileContent(configFile)
+	conf := config.Config{}
+	err := json.Unmarshal(configJson, &conf)
+	if err != nil {
+		panic(err)
+	}
 
-			// Replace the tag {struct_field},{column_name},{package}
-			packageName := utils.GetPackageNameFromOutPutDir(outDir)
-			structStr = utils.ReplaceFields(db, structStr, packageName, tableName)
-
-			// Write structStr to model file
-			utils.CreateAndWriteFile(outDir+parseTableName+".go", structStr, config.GlobalCfg["file_mode"])
+	templatePath := c.String("tpl")
+	var template string
+	if templatePath != "" {
+		templateByte, err := ioutil.ReadFile(templatePath)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("%v. It will use framework template.", err))
 		}
-	}*/
+		template = string(templateByte)
+	}
+	if template == "" {
+		template = config.MODEL_STRUCT_TEMPLATE
+	}
+
+	confFileModel := conf.FileMode
+	if confFileModel == "" {
+		confFileModel = config.FileModel
+	}
+
+	for _, outConf := range conf.OutConfList {
+		outDir := core.CheckAndMakeDir(outConf.OutputDir+"/", confFileModel)
+		dbType := conf.DbType
+		if dbType == "" {
+			dbType = config.DbType
+		}
+		db := core.GetDb(dbType, outConf.DbDn)
+		allTables := core.GetAllTables(db)
+		regTables := outConf.SelectTables
+		for _, tableName := range allTables {
+			if matched := core.StringMatchSlice(regTables, tableName); !matched {
+				continue
+			}
+			structStr, parseTableName := core.ReplaceStruct(template, outConf.TablePrefix, tableName)
+			packageName := outConf.ModelPackage
+			if packageName == "" {
+				// Replace the tag {struct_field},{column_name},{package}
+				packageName = core.GetPackageNameFromOutPutDir(outDir)
+			}
+			structStr = core.ReplaceFields(db, structStr, packageName, tableName)
+
+			core.CreateAndWriteFile(outDir+parseTableName+".go", structStr, confFileModel)
+		}
+	}
+	return nil
 }

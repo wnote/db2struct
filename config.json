@@ -1,12 +1,13 @@
 {
   "db_type":   "mysql",
   "file_mode": "0777",
-  "output_list":[
+  "out_conf_list":[
     {
       "table_prefix": "pjt_",
       "db_dn":        "root:123456@tcp(127.0.0.1:3306)/test?charset=utf8&parseTime=true&loc=Local",
       "output_dir":  "./model/test",
-      "select_tables":["project.*"]
+      "select_tables":["project.*"],
+      "model_package":"test_package"
     }
   ]
 }

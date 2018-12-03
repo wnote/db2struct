@@ -39,4 +39,6 @@ var (
 		"integer":   "uint32",
 		"bigint":    "uint64",
 	}
+	DbType    = "mysql"
+	FileModel = "0777"
 )

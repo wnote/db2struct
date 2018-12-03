@@ -2,7 +2,6 @@ package core
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 type field struct {
@@ -17,7 +16,6 @@ type field struct {
 func GetAllTables(db *sql.DB) []string {
 	rows, err := db.Query("show tables;")
 	if err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 	var allTables []string
@@ -53,7 +51,6 @@ func getAllFields(db *sql.DB, tableName string) ([]field, error) {
 func GetDb(dbType string, dbDn string) *sql.DB {
 	db, err := sql.Open(dbType, dbDn)
 	if err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 	return db

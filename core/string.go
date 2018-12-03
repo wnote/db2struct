@@ -9,6 +9,7 @@ import (
 	"github.com/wnote/db2struct/config"
 )
 
+// Replace the tag {struct_name},{table_name}.
 func ReplaceStruct(structStr string, tablePrefix string, tableName string) (string, string) {
 	parseTableName := tableName
 	if tablePrefix != "" {
@@ -26,7 +27,6 @@ func ReplaceStruct(structStr string, tablePrefix string, tableName string) (stri
 func ReplaceFields(db *sql.DB, structStr string, packageName string, tableName string) string {
 	fieldList, err := getAllFields(db, tableName)
 	if err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 	var timeTimeExist bool
@@ -99,4 +99,26 @@ func parseName(name string) string {
 	name = regexp.MustCompile("^[a-zA-Z]").ReplaceAllStringFunc(name, f)
 	name = regexp.MustCompile("_[a-zA-Z]").ReplaceAllStringFunc(name, f)
 	return name
+}
+
+func StringMatchSlice(regTables []string, name string) bool {
+	matched := true
+	if len(regTables) > 0 {
+		matched = false
+		for _, regStr := range regTables {
+			reg, err := regexp.Compile(regStr)
+			if err != nil {
+				panic(err)
+			}
+			matched = reg.MatchString(name)
+			if matched {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			matched = false
+		}
+	}
+	return matched
 }
