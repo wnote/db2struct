@@ -56,7 +56,9 @@
          }
         ```
 + 配置文件示例
+
     [config.json 示例](./config.json)
+    
     [model模板示例](./docs/example_model.tpl)
 
 + 如何运行此工具

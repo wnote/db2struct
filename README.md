@@ -56,7 +56,9 @@
          }
         ```
 + Configure example
+
     [config.json Example](./config.json)
+    
     [Template Example](./docs/example_model.tpl)
 
 + Run tools
