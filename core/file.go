@@ -1,7 +1,8 @@
-package utils
+package core
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -15,8 +16,7 @@ func GetPackageNameFromOutPutDir(outPutDir string) string {
 		panic(err)
 	}
 	packageName := filepath.Base(outPutDir)
-	packageName = regexp.MustCompile("^[^a-zA-Z]+").ReplaceAllString(packageName, "")
-	packageName = regexp.MustCompile("[^a-zA-Z0-9_]+").ReplaceAllString(packageName, "")
+	packageName = regexp.MustCompile("[^a-zA-Z_]+").ReplaceAllString(packageName, "")
 	return packageName
 }
 
@@ -28,19 +28,18 @@ func CheckAndMakeDir(dir string, fileMode string) string {
 	if !exist {
 		err := os.MkdirAll(dir, getFileModeFromString(fileMode))
 		if err != nil {
-			fmt.Printf("%s", err)
 			panic(err)
 		} else {
-			fmt.Print("Make dir OK!")
+			fmt.Println("Make dir OK!")
 		}
 	}
 	return dir
 }
 
+// Write structStr to model file
 func CreateAndWriteFile(fileName string, content string, fileMode string) {
 	fp, err := os.Create(fileName)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Create file %s err:%v", fileName, err))
 		panic(err)
 	}
 
@@ -71,4 +70,19 @@ func pathExists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+func GetFileContent(filePath string) []byte {
+	exist, err := pathExists(filePath)
+	if err != nil {
+		panic(err)
+	}
+	if !exist {
+		panic(filePath + " not exist!")
+	}
+	fileContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+	return fileContent
 }

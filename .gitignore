@@ -30,3 +30,5 @@ deploypkg/*
 debug
 
 model/*
+main
+db2struct
