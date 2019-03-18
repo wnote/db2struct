@@ -1,6 +1,6 @@
 
 # db2struct中文文档
-[View English version](../../README.md)
+[View English version](../README.md)
 
 ## 1, 关于此工具
  - 快速将数据库表结构转换为golang模型的工具
@@ -59,7 +59,7 @@
 
     [config.json 示例](../config.json)
     
-    [model模板示例](./docs/example_model.tpl)
+    [model模板示例](./example_model.tpl)
 
 + 如何运行此工具
     ```bash
