@@ -70,14 +70,14 @@
     go run main.go -c ./config.json -t example_model.tpl
     ```
 
-## Contributing
+## 4, Contributing
 
 [You can send pull request to deliver a better db2struct](https://github.com/wnote/db2struct)
 
 ### Contributor
    * aengineer@foxmail.com
 
-## License
+## 5, License
 
 © wnote, 2018~time.Now
 

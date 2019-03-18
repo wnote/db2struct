@@ -18,7 +18,7 @@
 
    cd /path/to/wnote/db2struct 进入目录
 
-   ### vi config.json
+   #### vi config.json
      ```json
      {
        "db_type":   "mysql",
@@ -44,7 +44,7 @@
        select_tables: 默认为空，空则表示数据库配置下的所有表都生成，可以使用正则表达式，如 ["project.*","test.*","table_name"]，只要匹配其中一个正则，则此表会输出
        model_package: 输出模型的package名字，默认为output_dir配置的目录名
     ```
-    ### 简化版本 config.json
+    #### 简化版本 config.json
          ```json
          {
            "out_conf_list":[
@@ -55,7 +55,7 @@
            ]
          }
         ```
-+ 配置文件示例
++  配置文件示例
 
     [config.json 示例](../config.json)
     
@@ -68,6 +68,6 @@
     go run main.go -c ./config.json -t example_model.tpl // -t没有设置时，使用默认配置 config/default_template.go定义好了
     ```
 
-## 贡献
+## 4, 贡献
 
 [如果你有什么bug修复及改进建议，请发送pull request](https://github.com/wnote/db2struct)
