@@ -1,11 +1,12 @@
 package config
 
 type OutputConf struct {
-	DbDn         string   `json:"db_dn"`
-	OutputDir    string   `json:"output_dir"`
-	TablePrefix  string   `json:"table_prefix"`
-	SelectTables []string `json:"select_tables"`
-	ModelPackage string   `json:"model_package"`
+	DbDn          string   `json:"db_dn"`
+	OutputDir     string   `json:"output_dir"`
+	TablePrefix   string   `json:"table_prefix"`
+	SelectTables  []string `json:"select_tables"`
+	ModelPackage  string   `json:"model_package"`
+	ExcludeFields string   `json:"exclude_fields"`
 }
 
 type Config struct {

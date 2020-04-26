@@ -92,7 +92,7 @@ func AppAction(c *cli.Context) error {
 				// Replace the tag {struct_field},{column_name},{package}
 				packageName = core.GetPackageNameFromOutPutDir(outDir)
 			}
-			structStr = core.ReplaceFields(db, structStr, packageName, tableName)
+			structStr = core.ReplaceFields(db, structStr, packageName, tableName,outConf.ExcludeFields)
 
 			core.CreateAndWriteFile(outDir+parseTableName+".go", structStr, confFileModel)
 		}

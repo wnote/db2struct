@@ -24,17 +24,27 @@ func ReplaceStruct(structStr string, tablePrefix string, tableName string) (stri
 	return structStr, parseTableName
 }
 
-func ReplaceFields(db *sql.DB, structStr string, packageName string, tableName string) string {
+func ReplaceFields(db *sql.DB, structStr string, packageName string, tableName string,excludeFields string) string {
 	fieldList, err := getAllFields(db, tableName)
 	if err != nil {
 		panic(err)
 	}
+	var excludeFieldMap = make(map[string]bool)
+	if len(excludeFields) > 0 {
+		exFields := strings.Split(excludeFields,",")
+		for _,f:= range exFields{
+			excludeFieldMap[f] = true
+		}
+	}
+
 	var timeTimeExist bool
 	structStr = regexp.MustCompile("\\s*\\{struct_field\\}.*").ReplaceAllStringFunc(structStr, func(s string) string {
 		var replaceStructList [][]string
 		var maxStructFieldLen, maxTypeLen int
 		for _, field := range fieldList {
-
+			if excludeFieldMap[field.Column] {
+				continue
+			}
 			typeName := getGoTypeFromColumnType(field.Type)
 
 			structField := parseName(field.Column)
