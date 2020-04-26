@@ -29,7 +29,8 @@
            "db_dn":        "root:123456@tcp(127.0.0.1:3306)/test?charset=utf8&parseTime=true&loc=Local",
            "output_dir":  "./model/test",
            "select_tables":["project.*"],
-           "model_package":"test_package"
+           "model_package":"test_package",
+           "exclude_fields":"id,create_time"
          }
        ]
      }
@@ -43,6 +44,7 @@
        output_dir: model output dir
        select_tables: null is default,  all table will output the models
                       // regexp,default is all table in this database
+       exclude_fields:ignore some fields when generate struct
     ```
     ### Simple config.json
          ```json

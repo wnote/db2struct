@@ -8,7 +8,7 @@
       "output_dir":  "./model/test",
       "select_tables":[".*"],
       "model_package":"model",
-      "exclude_fields":"id"
+      "exclude_fields":"id,create_time"
     }
   ]
 }

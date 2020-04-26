@@ -29,7 +29,8 @@
            "db_dn":        "root:123456@tcp(127.0.0.1:3306)/test?charset=utf8&parseTime=true&loc=Local",
            "output_dir":  "./model/test",
            "select_tables":["project.*"],
-           "model_package":"test_package"
+           "model_package":"test_package",
+           "exclude_fields":"id,create_time"
          }
        ]
      }
@@ -43,6 +44,7 @@
        output_dir: golang模型输出配置
        select_tables: 默认为空，空则表示数据库配置下的所有表都生成，可以使用正则表达式，如 ["project.*","test.*","table_name"]，只要匹配其中一个正则，则此表会输出
        model_package: 输出模型的package名字，默认为output_dir配置的目录名
+       exclude_fields: 当生成struct结构体时，需要忽略的字段，使用逗号分隔
     ```
     #### 简化版本 config.json
          ```json
