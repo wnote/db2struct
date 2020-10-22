@@ -7,3 +7,4 @@ type {struct_name} struct {
 func (p {struct_name}) TableName() string {
 	return "{table_name}"
 }
+
